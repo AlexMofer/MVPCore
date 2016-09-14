@@ -1,8 +1,6 @@
 # BaseTabStrip
 ![ICON](https://github.com/AlexMofer/ProjectX/blob/master/basetabstrip/icon.png)
 
-项目详细地址：[**ProjectX**](https://github.com/AlexMofer/ProjectX/tree/master/basetabstrip)(方便统一管理)
-
 继承自View，可自动捆绑ViewPager，BaseTabStrip为基础类，仅实现了一些通用基础逻辑。具体的实现效果需要实现与重写部分方法。
 ## 要求
 - minSdkVersion 9
@@ -12,7 +10,7 @@
 ```java
 dependencies {
     ⋯
-    compile 'am.widget:basetabstrip:24.2.0'
+    compile 'am.widget:basetabstrip:24.2.1'
     ⋯
 }
 ```
@@ -104,6 +102,7 @@ dependencies {
 - 保持跟其他官方支持库版本一致（如：com.android.support:appcompat-v7），否则可能出现错误
 
 ## 历史
+- [**24.2.0**](https://bintray.com/alexmofer/maven/BaseTabStrip/24.2.0)
 - [**3.1.1**](https://bintray.com/alexmofer/maven/BaseTabStrip/3.1.1)（[**说明**](https://github.com/AlexMofer/ProjectX/tree/master/basetabstrip/history/3.1.1)）
 - [**3.1.0**](https://bintray.com/alexmofer/maven/BaseTabStrip/3.1.0)
 - [**3.0.0**](https://bintray.com/alexmofer/maven/BaseTabStrip/3.0.0)
