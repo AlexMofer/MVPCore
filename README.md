@@ -1,5 +1,5 @@
 # BaseTabStrip
-![ICON](https://github.com/AlexMofer/ProjectX/blob/master/basetabstrip/icon.png)
+![ICON](https://raw.githubusercontent.com/AlexMofer/ProjectX/master/basetabstrip/icon.png)
 
 项目详细地址：[**ProjectX**](https://github.com/AlexMofer/ProjectX/tree/master/basetabstrip)(方便统一管理)
 
