@@ -1,0 +1,3 @@
+rootProject.name = "MVPCore"
+include ':app'
+include ':mvp-core'
