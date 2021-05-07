@@ -1,10 +1,6 @@
 MVP Core
 ========
 
-<div align=center>
-<img src="icon.png" alt="Icon"/>
-</div>
-
 介绍
 ---
 
