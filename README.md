@@ -23,9 +23,6 @@ dependencies {
 
 - Gmail: <mailto:moferalex@gmail.com>
 
-如果发现错误，请在此处提出:
-<https://github.com/AlexMofer/MVPCore/issues>
-
 许可
 ---
 
