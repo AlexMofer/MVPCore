@@ -1,0 +1,154 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+final Properties pp = new Properties()
+pp.load(project.file("/pom.properties").newDataInputStream())
+
+final Properties vp = new Properties()
+vp.load(project.file("/version.properties").newDataInputStream())
+
+final Properties sp = new Properties()
+sp.load(project.file("../secret.properties").newDataInputStream())
+
+version = vp.getProperty("VERSION_NAME")
+group = pp.getProperty("POM_GROUP_ID")
+
+afterEvaluate { project ->
+    publishing {
+        repositories {
+            maven {
+                url = vp.getProperty("VERSION_NAME").contains("SNAPSHOT") ?
+                        pp.getProperty("SNAPSHOT_REPOSITORY_URL",
+                                "https://oss.sonatype.org/content/repositories/snapshots/")
+                        :
+                        pp.getProperty("RELEASE_REPOSITORY_URL",
+                                "https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+
+                credentials(PasswordCredentials) {
+                    username = sp.getProperty("NEXUS_USERNAME")
+                    password = sp.getProperty("NEXUS_PASSWORD")
+                }
+            }
+        }
+    }
+
+    if (project.getPlugins().hasPlugin('com.android.application') ||
+            project.getPlugins().hasPlugin('com.android.library')) {
+
+        task androidJavadocs(type: Javadoc) {
+            source = android.sourceSets.main.java.source
+            classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+            excludes = ['**/*.kt']
+        }
+
+        task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+            archiveClassifier.set("javadoc")
+//            classifier = 'javadoc'
+            from androidJavadocs.destinationDir
+        }
+
+        task androidSourcesJar(type: Jar) {
+            archiveClassifier.set("sources")
+//            classifier = 'sources'
+            from android.sourceSets.main.java.source
+        }
+    } else {
+        javadoc {
+            options {
+                encoding "UTF-8"
+                charSet 'UTF-8'
+            }
+        }
+
+        task sourcesJar(type: Jar, dependsOn: classes) {
+            archiveClassifier.set("sources")
+//            classifier = 'sources'
+            from sourceSets.main.allSource
+        }
+
+        task javadocJar(type: Jar, dependsOn: javadoc) {
+            archiveClassifier.set("javadoc")
+//            classifier = 'javadoc'
+            from javadoc.destinationDir
+        }
+    }
+
+    if (JavaVersion.current().isJava8Compatible()) {
+        allprojects {
+            tasks.withType(Javadoc) {
+                options.addStringOption('Xdoclint:none', '-quiet')
+            }
+        }
+    }
+
+    if (JavaVersion.current().isJava9Compatible()) {
+        allprojects {
+            tasks.withType(Javadoc) {
+                options.addBooleanOption('html5', true)
+            }
+        }
+    }
+
+    artifacts {
+        if (project.getPlugins().hasPlugin('com.android.application') ||
+                project.getPlugins().hasPlugin('com.android.library')) {
+            archives androidSourcesJar
+            archives androidJavadocsJar
+        } else {
+            archives sourcesJar
+            archives javadocJar
+        }
+    }
+
+    if (project.getPlugins().hasPlugin('com.android.application') ||
+            project.getPlugins().hasPlugin('com.android.library')) {
+        android.libraryVariants.all { variant ->
+            tasks.androidJavadocs.doFirst {
+                classpath += files(variant.javaCompileProvider.get().classpath.files.join(File.pathSeparator))
+            }
+        }
+    }
+
+    publishing.publications.all { publication ->
+        publication.groupId = pp.getProperty("POM_GROUP_ID")
+        publication.artifactId = pp.getProperty("POM_ARTIFACT_ID")
+        publication.version = vp.getProperty("VERSION_NAME")
+
+        publication.artifact ['archives']
+
+        {
+            pom ->
+                pom.name = pp.getProperty("POM_NAME")
+                pom.packaging = pp.getProperty("POM_PACKAGING")
+                pom.description = pp.getProperty("POM_DESCRIPTION")
+                pom.url = pp.getProperty("POM_URL")
+
+                pom.scm {
+                    url = pp.getProperty("POM_SCM_URL")
+                    connection = pp.getProperty("POM_SCM_CONNECTION")
+                    developerConnection = pp.getProperty("POM_SCM_DEV_CONNECTION")
+                }
+
+                pom.licenses {
+                    license {
+                        name = pp.getProperty("POM_LICENCE_NAME")
+                        url = pp.getProperty("POM_LICENCE_URL")
+                        distribution = pp.getProperty("POM_LICENCE_DIST")
+                    }
+                }
+
+                pom.developers {
+                    developer {
+                        id = pp.getProperty("POM_DEVELOPER_ID")
+                        name = pp.getProperty("POM_DEVELOPER_NAME")
+                    }
+                }
+        }
+    }
+
+    signing {
+        publishing.publications.all { publication ->
+            sign publication
+        }
+    }
+}

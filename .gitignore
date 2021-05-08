@@ -18,5 +18,9 @@ local.properties
 # Key
 *.jks
 
+# Secret
+secret.properties
+*.gpg
+
 # Other
 temp/

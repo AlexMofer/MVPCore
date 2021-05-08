@@ -13,7 +13,7 @@ MVP设计模式基础核心，与平台无关，便于进一步实现Android或�
 ```
 dependencies {
     ...
-    classpath 'com.am.mvp:mvp-core:1.0.0'
+    classpath 'io.github.alexmofer.mvp:mvp-core:1.0.0'
     ...
 }
 ```
