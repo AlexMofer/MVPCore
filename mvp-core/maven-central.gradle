@@ -19,10 +19,10 @@ afterEvaluate { project ->
             maven {
                 url = vp.getProperty("VERSION_NAME").contains("SNAPSHOT") ?
                         pp.getProperty("SNAPSHOT_REPOSITORY_URL",
-                                "https://oss.sonatype.org/content/repositories/snapshots/")
+                                "https://s01.oss.sonatype.org/content/repositories/snapshots/")
                         :
                         pp.getProperty("RELEASE_REPOSITORY_URL",
-                                "https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+                                "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
 
                 credentials(PasswordCredentials) {
                     username = sp.getProperty("NEXUS_USERNAME")

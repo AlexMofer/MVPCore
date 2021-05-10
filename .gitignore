@@ -21,6 +21,8 @@ local.properties
 # Secret
 secret.properties
 *.gpg
+*.pgp
+*.asc
 
 # Other
 temp/
