@@ -16,8 +16,6 @@
 
 package com.am.mvp.core;
 
-import java.lang.ref.WeakReference;
-
 /**
  * Presenter
  * Created by Alex on 2017/3/13.
@@ -25,7 +23,7 @@ import java.lang.ref.WeakReference;
 @SuppressWarnings("rawtypes")
 public abstract class MVPPresenter<V extends MVPView, M extends MVPModel> {
 
-    private WeakReference<MVPViewHolder<V>> mViewHolder;
+    private MVPViewHolder<V> mViewHolder;
     private M mModel;
 
     /**
@@ -36,17 +34,7 @@ public abstract class MVPPresenter<V extends MVPView, M extends MVPModel> {
      */
     @SuppressWarnings("unchecked")
     public <P extends MVPPresenter> P setViewHolder(MVPViewHolder<? extends MVPView> holder) {
-        if (mViewHolder != null) {
-            mViewHolder.clear();
-            mViewHolder = null;
-        }
-        if (holder == null)
-            return (P) this;
-        try {
-            mViewHolder = new WeakReference<>((MVPViewHolder<V>) holder);
-        } catch (ClassCastException e) {
-            // ignore
-        }
+        mViewHolder = (MVPViewHolder<V>) holder;
         return (P) this;
     }
 
@@ -56,8 +44,7 @@ public abstract class MVPPresenter<V extends MVPView, M extends MVPModel> {
      * @return View
      */
     protected V getView() {
-        final MVPViewHolder<V> holder = mViewHolder == null ? null : mViewHolder.get();
-        return holder == null ? null : holder.getView();
+        return mViewHolder == null ? null : mViewHolder.getView();
     }
 
     /**
@@ -78,5 +65,14 @@ public abstract class MVPPresenter<V extends MVPView, M extends MVPModel> {
         mModel = model;
         //noinspection unchecked
         mModel.setPresenter(this);
+    }
+
+    /**
+     * 判断是否已绑定View
+     *
+     * @return 已绑定View时返回true
+     */
+    public boolean isAttachedToView() {
+        return getView() != null;
     }
 }
